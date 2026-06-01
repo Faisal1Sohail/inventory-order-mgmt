@@ -160,34 +160,96 @@ function App() {
   const [orderCancelOpen, setOrderCancelOpen] = useState(false);
   const [orderToCancel, setOrderToCancel] = useState(null);
 
-  const loadData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [prodRes, custRes, ordRes] = await Promise.all([
-        axios.get(`${API_BASE}/products/`),
-        axios.get(`${API_BASE}/customers/`),
-        axios.get(`${API_BASE}/orders/`)
-      ]);
-      console.log("Products Response:", prodRes.data);
-      console.log("Customers Response:", custRes.data);
-      console.log("Orders Response:", ordRes.data);
+  // const loadData = async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const [prodRes, custRes, ordRes] = await Promise.all([
+  //       axios.get(`${API_BASE}/products/`),
+  //       axios.get(`${API_BASE}/customers/`),
+  //       axios.get(`${API_BASE}/orders/`)
+  //     ]);
+  //     console.log("Products Response:", prodRes.data);
+  //     console.log("Customers Response:", custRes.data);
+  //     console.log("Orders Response:", ordRes.data);
 
-      console.log("Products Array?", Array.isArray(prodRes.data));
-      console.log("Customers Array?", Array.isArray(custRes.data));
-      console.log("Orders Array?", Array.isArray(ordRes.data));
-      
-      setProducts(prodRes.data);
-      setCustomers(custRes.data);
-      setOrders(ordRes.data);
-    } catch (err) {
-      console.error('Failed to load server data:', err);
-      setError('FastAPI backend offline/loading. Active fallbacks simulator booted.');
-      loadSimulatedData();
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     console.log("Products Array?", Array.isArray(prodRes.data));
+  //     console.log("Customers Array?", Array.isArray(custRes.data));
+  //     console.log("Orders Array?", Array.isArray(ordRes.data));
+
+  //     //setProducts(prodRes.data);
+  //     //setCustomers(custRes.data);
+  //     //setOrders(ordRes.data);
+  //     setProducts(
+  //       Array.isArray(prodRes.data)
+  //         ? prodRes.data
+  //         : prodRes.data.items || prodRes.data.results || []
+  //   );
+
+  //     setCustomers(
+  //       Array.isArray(custRes.data)
+  //         ? custRes.data
+  //         : custRes.data.items || custRes.data.results || []
+  //   );
+
+  //     setOrders(
+  //       Array.isArray(ordRes.data)
+  //         ? ordRes.data
+  //         : ordRes.data.items || ordRes.data.results || []
+  //     );
+  //   } catch (err) {
+  //     console.error('Failed to load server data:', err);
+  //     setError('FastAPI backend offline/loading. Active fallbacks simulator booted.');
+  //     loadSimulatedData();
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  const loadData = async () => {
+  setLoading(true);
+  setError(null);
+
+  try {
+    const [prodRes, custRes, ordRes] = await Promise.all([
+      axios.get(`${API_BASE}/products/`),
+      axios.get(`${API_BASE}/customers/`),
+      axios.get(`${API_BASE}/orders/`)
+    ]);
+
+    console.log("Products Response:", prodRes.data);
+    console.log("Customers Response:", custRes.data);
+    console.log("Orders Response:", ordRes.data);
+
+    console.log("Products Array?", Array.isArray(prodRes.data));
+    console.log("Customers Array?", Array.isArray(custRes.data));
+    console.log("Orders Array?", Array.isArray(ordRes.data));
+
+    setProducts(
+      Array.isArray(prodRes.data)
+        ? prodRes.data
+        : prodRes.data.items || prodRes.data.results || []
+    );
+
+    setCustomers(
+      Array.isArray(custRes.data)
+        ? custRes.data
+        : custRes.data.items || custRes.data.results || []
+    );
+
+    setOrders(
+      Array.isArray(ordRes.data)
+        ? ordRes.data
+        : ordRes.data.items || ordRes.data.results || []
+    );
+
+  } catch (err) {
+    console.error('Failed to load server data:', err);
+    setError('FastAPI backend offline/loading. Active fallbacks simulator booted.');
+    loadSimulatedData();
+  } finally {
+    setLoading(false);
+  }
+};
 
   const loadSimulatedData = () => {
     // Only load if not already set, to prevent overwriting simulator creations
