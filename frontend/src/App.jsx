@@ -169,6 +169,14 @@ function App() {
         axios.get(`${API_BASE}/customers/`),
         axios.get(`${API_BASE}/orders/`)
       ]);
+      console.log("Products Response:", prodRes.data);
+      console.log("Customers Response:", custRes.data);
+      console.log("Orders Response:", ordRes.data);
+
+      console.log("Products Array?", Array.isArray(prodRes.data));
+      console.log("Customers Array?", Array.isArray(custRes.data));
+      console.log("Orders Array?", Array.isArray(ordRes.data));
+      
       setProducts(prodRes.data);
       setCustomers(custRes.data);
       setOrders(ordRes.data);
@@ -212,7 +220,10 @@ function App() {
   }, []);
 
   // Filter low stock products (defined as quantity <= 10)
-  const lowStockProducts = products.filter(p => p.stock_quantity <= 10);
+  //const lowStockProducts = products.filter(p => p.stock_quantity <= 10);
+  const lowStockProducts = Array.isArray(products)
+  ? products.filter(p => p.stock_quantity <= 10)
+  : [];
 
   // ==========================================
   // PRODUCT ACTION HANDLERS
