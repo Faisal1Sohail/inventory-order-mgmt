@@ -148,5 +148,5 @@ The system is fully decoupled and optimized for cloud staging deployments:
 ### Frontend: [Vercel](https://vercel.com/)
 * Builds Vite statically using Node 20.
 * Serves files globally via Vercel Edge CDNs.
-* Includes [vercel.json](file:///C:/Users/faisa/.gemini/antigravity/scratch/inventory-order-mgmt/frontend/vercel.json) rewrites, routing `/api/v1/*` Edge requests directly to Railway to prevent production CORS, and setting up SPA fallbacks.
+* Includes [vercel.json](frontend/vercel.json) rewrites, routing `/api/v1/*` Edge requests directly to Railway to prevent production CORS, and setting up SPA fallbacks.
 * **Production Live Dashboard**: `https://YOUR_FRONTEND_VERCEL_URL.vercel.app`
