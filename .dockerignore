@@ -1,0 +1,40 @@
+# Centralized Docker Ignore Definitions
+
+# Version Control
+.git
+.gitignore
+.github
+
+# Python Runtime artifacts
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+**/.venv/
+**/venv/
+**/env/
+backend/verify_*.py
+
+# Node Package & Compilation Bundles
+**/node_modules/
+**/dist/
+**/.npm/
+**/npm-debug.log*
+frontend/dist/
+
+# Configuration and Environment secrets
+**/.env
+**/.env.*
+!**/.env.example
+
+# IDEs & System metadata
+**/.idea/
+**/.vscode/
+**/*.suo
+**/*.ntvs*
+**/*.njsproj
+**/*.sln
+**/*.swp
+**/*.log
+**/.DS_Store

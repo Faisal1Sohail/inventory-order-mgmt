@@ -1,0 +1,417 @@
+{
+  "info": {
+    "_postman_id": "a9db5867-b8db-4e12-8700-1c39abfd3f2c",
+    "name": "Inventory & Order Management - Core API",
+    "description": "Postman Collection for managing products, customers, and orders in the Inventory & Order Management System. Includes validation payloads, inventory checking, and transactional rollbacks.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"PROD-WIDGET-001\",\n  \"name\": \"Super Widget Extreme\",\n  \"description\": \"A super widget designed for ultimate performance and sleek aesthetics.\",\n  \"price\": 49.99\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ""
+              ]
+            },
+            "description": "Registers a new catalog item. Returns the generated Product with UUID, created_at, and updated_at timestamps.\n\nChecks SKU uniqueness; raises 400 Bad Request if SKU is already in use."
+          },
+          "response": []
+        },
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/?skip=0&limit=100",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset index for pagination"
+                },
+                {
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum records to return"
+                }
+              ]
+            },
+            "description": "Retrieves a paginated list of all products in the database catalog, sorted by SKU."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "{{product_id}}"
+              ]
+            },
+            "description": "Retrieves product detailed parameters based on the unique Product UUID.\n\nRaises 404 Not Found if the ID is incorrect."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Super Widget Extreme II\",\n  \"price\": 59.99,\n  \"description\": \"Upgraded version of the original widget with enhanced features.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "{{product_id}}"
+              ]
+            },
+            "description": "Modifies specified parameters on a product. Only fields passed in the request body are modified.\n\nAsserts SKU uniqueness if updating the SKU parameter."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "{{product_id}}"
+              ]
+            },
+            "description": "Deletes the product from the catalog.\n\nRaises 404 Not Found if the product is not present."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jane.doe@example.com\",\n  \"name\": \"Jane Doe\",\n  \"phone\": \"+1-555-0199\",\n  \"address\": \"456 Commerce Way, Tech City\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/customers/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "customers",
+                ""
+              ]
+            },
+            "description": "Creates a new customer profile. Enforces unique email addresses; raises 400 Bad Request if the email is already registered."
+          },
+          "response": []
+        },
+        {
+          "name": "List Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/customers/?skip=0&limit=100",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "customers",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset index for pagination"
+                },
+                {
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum records to return"
+                }
+              ]
+            },
+            "description": "Retrieves a paginated list of registered customers, ordered by most recently created."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/customers/{{customer_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "customers",
+                "{{customer_id}}"
+              ]
+            },
+            "description": "Retrieves specific customer parameters based on the unique Customer UUID.\n\nRaises 404 Not Found if the ID does not exist."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Customer Profile",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/customers/{{customer_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "customers",
+                "{{customer_id}}"
+              ]
+            },
+            "description": "Deletes a customer account profile from the database.\n\nRaises 404 Not Found if the customer is not registered."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Place Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_id\": \"{{customer_id}}\",\n  \"items\": [\n    {\n      \"product_id\": \"{{product_id}}\",\n      \"quantity\": 2\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "orders",
+                ""
+              ]
+            },
+            "description": "Places a new customer checkout order.\n* Validates customer presence.\n* Row-locks catalog products to check inventory levels.\n* Returns 400 Bad Request if stock level is insufficient.\n* Automatically decrements stock quantities, accumulates product prices, and logs line items.\n* Automatically rolls back all operations if any intermediate item check fails."
+          },
+          "response": []
+        },
+        {
+          "name": "List Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/?skip=0&limit=100",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "orders",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Offset index for pagination"
+                },
+                {
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum records to return"
+                }
+              ]
+            },
+            "description": "Retrieves a paginated list of all orders in the database system."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "orders",
+                "{{order_id}}"
+              ]
+            },
+            "description": "Retrieves order parameters and sub-items based on the unique Order UUID.\n\nRaises 404 Not Found if missing."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/{{order_id}}/cancel",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "orders",
+                "{{order_id}}",
+                "cancel"
+              ]
+            },
+            "description": "Cancels an active pending order and restores all purchased quantities back to the product's catalog stock level.\n\nRaises 400 Bad Request if the order has already been shipped."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "product_id",
+      "value": "INSERT_PRODUCT_UUID_HERE",
+      "type": "string"
+    },
+    {
+      "key": "customer_id",
+      "value": "INSERT_CUSTOMER_UUID_HERE",
+      "type": "string"
+    },
+    {
+      "key": "order_id",
+      "value": "INSERT_ORDER_UUID_HERE",
+      "type": "string"
+    }
+  ]
+}
